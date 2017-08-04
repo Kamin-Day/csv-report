@@ -22,9 +22,10 @@ CSV.foreach("accounts.txt", {headers: true, return_headers: false}) do |row|
     inflow = row["Inflow"].delete('$, , ').to_f
     changeInFunds = inflow - outflow 
 
-    runningTotal =@people[row["Account"].chomp][row ["Category"].chomp]
+    @people[row["Account"].chomp][row ["Category"].chomp].push(changeInFunds)
 
-    #You are runnning the [ ] method on something that is nil
+    #here is where we want to put the things, .push is what we are putting the things in 
+
 
 end
  binding.pry
