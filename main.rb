@@ -24,13 +24,35 @@ CSV.foreach("accounts.txt", {headers: true, return_headers: false}) do |row|
 
     @people[row["Account"].chomp][row ["Category"].chomp].push(changeInFunds)
 
-    #here is where we want to put the things, .push is what we are putting the things in 
+  	  #here is where we want to put the things, .push is what we are putting the things in 
+
 
 
 end
- binding.pry
+	balanceSonia = 0
+	balancePriya = 0
 
-"."
+#This line groes through each value for "Sonia", which are the categories.
+#For each catagory, it takes the sum its value, the array of transactions, and
+#adds them to the variable "balanceSonia"
+  	@people["Sonia"].each_value {|transVal| balanceSonia += transVal.sum.round(2)}
+
+
+#This line groes through each value for "Sonia", which are the categories.
+#For each catagory, it takes the sum its value, the array of transactions, and
+#adds them to the variable "Priya"
+
+  	@people["Priya"].each_value {|transVal| balancePriya += transVal.sum.round(2)}
+
+	puts balancePriya.round(2)
+	puts balanceSonia.round(2)
+	 
+
+ 	binding.pry
+
+ 	puts "...."
+
+
 
 
 
