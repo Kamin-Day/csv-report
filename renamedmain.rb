@@ -1,15 +1,6 @@
 require "csv"
 require "pry"
 
-inputArgs = ARGV.map(&:upcase)
-inputArgs = inputArgs.sort
-binding.pry
-#Not working - to return in different formats
-#probably the wrong approach and needs to be deleted, 
-# I was just playing with code when I made this top bit
-
-
-# #-------------------------
 # if ARGV == nil
 # 	puts "Which account infortmation would you like to view?"
 # 	puts "Please type in \"Sonia\", \"Priya\", or \"all\"."
@@ -18,33 +9,7 @@ binding.pry
 # 	puts "Would you like the report for #{nameRequest} displayed?"
 # 	puts "Please type in \"normal\", \"csv\", or \"html\"."
 # 	displayFormat = gets
-
 # end
-# --------------
-
-##===============================================================================
-##===============================================================================
-##===============================================================================
-
-
-
-
-#THIS WILL EVENTUALLY BE CASE or IF ELSE STATEMENTS
-#TO DETERMINE WHICH OUTPUT FUNCTION TO RUN, 
-
-#################################################
-# 	#  #####. #.   #. # # #
-# 	#  # 	   #. #.  # # #
-#####. #####     #.   # # #
-# 	#. #        #.    
-# 	#. #####   #.     # # #
-
-# => Tomorrow, I need to start by creating some code
-# =>  To print out the reports in HTML ALSO"
-# =>   ..should be fun, try looking out guidelines for html output in ruby
-
-
-
 
 
 @people ={}
@@ -102,30 +67,17 @@ end
 
 	@people["Sonia"].each_value {|catagoryTotal| cataAvgsSonia.push((catagoryTotal.sum.round(2) / catagoryTotal.length).round(2))}
 	@people["Priya"].each_value {|catagoryTotal| cataAvgsPriya.push((catagoryTotal.sum.round(2) / catagoryTotal.length).round(2))}
+
+
+
+
+
+
 binding.pry
 
+if ARGV == nil
 
-
-
-#EVERYTHING BELOW THIS IS BEING WORKED ON FOR THE EXTENSIONS
-#AIM IS TO PRINT EITHER ALL OF THE RECORDS, OR JUST RECORDS
-#FOR SONIA OR PRIYA BASED ON WHAT IS PASSED INTO THE ARGV VARIABLE
-#WHEN THE FILE IS RAN FROM THE TERMINAL
-
-
-#If no arguements passed, ARGV is an empty array [], and all accounts are printed
-
-
-#printing is now finished, and boy is it ugly.
- 	binding.pry
-
- 
-
-# THIS IS THE ELSIF STATEMENT	
-#If passed "priya" as arguement, prints Priya's information
-#Check ARGV using terminal while in pry to see its value
-if ARGV[0].to_s.upcase == "PRIYA"
-	puts @lineBreak
+puts @lineBreak
 	puts "Account: Priya... Balance: $#{balancePriya.round(2)}"
 	puts @lineBreak
 	puts "Catagory           | Total Spent | Average Transaction"
@@ -139,12 +91,13 @@ if ARGV[0].to_s.upcase == "PRIYA"
 	end	
 #resets the index back to 0 to use for next account
 	i = 0
-#FINISHED PRINTING PRIYA
+
+#First account has now been printed
 
 
-#SAME CASE WITH ARGV - IF PASSED SONIA, WILL PRINT SONIAS INFORMATION
-#If passed "sonia" as arguement, prints Sonia's information
-elsif ARGV[0].to_s.upcase == "SONIA"
+#prints account header with name and balance
+# 	also prints colum (haha i cant spell, hurray!) titles
+	
 	puts	
 	puts @lineBreak
 	puts "Account: Sonia... Balance: $#{balanceSonia.round(2)}"
@@ -156,15 +109,46 @@ elsif ARGV[0].to_s.upcase == "SONIA"
 		i += 1
 	end	
 	puts
+	i = 0
 
-	binding.pry
+#printing is now finished, and boy is it ugly.
 
  	puts "...."
 
-elsif ARGV[0] == nil
+if ARGV.include? "CSV" && "Sonia"
+	CSV.foreach("accounts.txt", {headers: true, return_headers: false}) do |row|
+		if "Account" == "Sonia"
+			puts row 
+		end 
+	end
+elsif ARGV.include? "CSV" && "Priya"
+	CSV.foreach("accounts.txt", {headers: true, return_headers: false}) do |row|
+		if "Account" == "Priya"
+			puts row 
+		end
+	end
+elsif ARGV.include? "CSV"
+	CSV.foreach("accounts.txt", {headers: true, return_headers: false}) do |row|
+		puts row 
+	end
+end
 
-#ALL OF THE CODE FROM HERE TO THE ELSIF STATEMENT IS TO PRINT THE FULL REPORT
 
+
+
+
+
+
+
+
+ 	
+#this is where printing starts
+
+#prints account header with name and balance
+# 	also prints colum (haha i cant spell, hurray!) titles
+	
+#If no arguements passed, ARGV is nil and all accounts are printed
+if ARGV[0] == nil
 	puts @lineBreak
 	puts "Account: Priya... Balance: $#{balancePriya.round(2)}"
 	puts @lineBreak
@@ -199,44 +183,42 @@ elsif ARGV[0] == nil
 	puts
 	i = 0
 end
+#printing is now finished, and boy is it ugly.
+ 	binding.pry
 
-# #This is being worked on for the extensions, to return in CSV format
-## ONLY WORKS PARTIALLY
-# # #===============================================================================
-if inputArgs.include?("CSV") and inputArgs.include?("SONIA")
-	CSV.foreach("accounts.txt", {headers: true, return_headers: false}) do |row|
-		if row["Account"] = "Sonia"
-			puts row
-			
-		end 
-	end
-elsif inputArgs.include? ("CSV" && "PRIYA")
-	CSV.foreach("accounts.txt", {headers: true, return_headers: false}) do |row|
-		if row["Account"] = "Priya"
-			puts row
-		end
-	end
-elsif inputArgs.include? ("CSV")
-	CSV.foreach("accounts.txt", {headers: true, return_headers: false}) do |row|
-		puts row
-	end
+ 	puts "...."
+#If passed "priya" as arguement, prints Priya's information
+elsif ARGV[0].to_s.upcase == "PRIYA"
+	puts @lineBreak
+	puts "Account: Priya... Balance: $#{balancePriya.round(2)}"
+	puts @lineBreak
+	puts "Catagory           | Total Spent | Average Transaction"
+	puts @lineDivide
+
+#this loop outputs information from the arrays in a line, and increases 
+#  	the index to continue. line is formated with the .ljust method
+	while i < accountsPriya.length
+  		puts "#{accountsPriya[i].to_s.ljust(18)} | $#{cataTotalsPriya[i].to_s.ljust(10)} | $#{cataAvgsPriya[i].to_s}"
+		i += 1
+	end	
+#resets the index back to 0 to use for next account
+	i = 0
+
+#If passed "sonia" as arguement, prints Sonia's information
+elsif ARGV[0].to_s.upcase == "SONIA"
+	puts	
+	puts @lineBreak
+	puts "Account: Sonia... Balance: $#{balanceSonia.round(2)}"
+	puts @lineBreak
+	puts "Catagory           | Total Spent | Average Transaction"
+	puts @lineDivide
+	while i < accountsSonia.length
+  		puts "#{accountsSonia[i].to_s.ljust(18)} | $#{cataTotalsSonia[i].to_s.ljust(10)} | $#{cataAvgsSonia[i].to_s}"
+		i += 1
+	end	
+	puts
+
+	binding.pry
+
+ 	puts "...."
 end
-# # =================================================================================
-
- 
-#EVENTUALLY, MAY WANT TO REORDER THE IF STATEMENTS TO BE
-# if name
-# => print name
-# elsif other name
-# => print other name
-# elsif 
-# => just print everything
-
-
-
-
-
-
-
-
-
